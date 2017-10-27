@@ -8,6 +8,9 @@
 #include <stdio.h>
 #include <tchar.h>
 
+#include <SDL.h>
+#include <glew.h>
+
 
 
 // TODO: reference additional headers your program requires here
