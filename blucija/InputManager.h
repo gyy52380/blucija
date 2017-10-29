@@ -59,9 +59,24 @@ enum Mousecode
 namespace io
 {
 
-bool is_key_pressed(KeyScancode key);
-bool is_key_released(KeyScancode key);
-bool is_key_held(KeyScancode key);
+inline bool is_key_pressed(KeyScancode key)
+{
+	extern bool pressed_keys[K_TOTAL];
+	return pressed_keys[key];
+}
+
+inline bool is_key_released(KeyScancode key)
+{
+	extern bool released_keys[K_TOTAL];
+	return released_keys[key];
+}
+
+inline bool is_key_held(KeyScancode key)
+{
+	extern const Uint8 *keyboard;
+	return static_cast<bool>(keyboard[key]);
+}
+
 bool update();
 
 }

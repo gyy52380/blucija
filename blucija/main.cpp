@@ -94,10 +94,10 @@ int main(int argc, char **argv)
 		if (io::is_key_released(K_DOWN))
 			std::cout << "DOWN is released" << std::endl;
 
-		/*if (io::is_key_held(K_UP))
+		if (io::is_key_held(K_UP))
 			std::cout << "UP is held" << std::endl;
 		if (io::is_key_held(K_DOWN))
-			std::cout << "DOWN is held" << std::endl;*/
+			std::cout << "DOWN is held" << std::endl;
 
 		gl::draw(the_window_handle);
 

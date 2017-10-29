@@ -5,26 +5,10 @@
 namespace io
 {
 
-const Uint8 *keyboard;;
+const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
 bool pressed_keys[K_TOTAL];
 bool released_keys[K_TOTAL];
-
 SDL_Event evnt;
-
-bool is_key_pressed(KeyScancode key)
-{
-	return pressed_keys[key];
-}
-
-bool is_key_released(KeyScancode key)
-{
-	return released_keys[key];
-}
-
-bool is_key_held(KeyScancode key)
-{
-	return static_cast<bool>(keyboard[key]);
-}
 
 bool update()
 {
