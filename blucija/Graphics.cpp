@@ -1,6 +1,7 @@
 #include "stdafx.h"
 #include "Graphics.h"
 #include "GLProgram.h"
+#include "Quad.h"
 
 #include "stb_image.h"
 
