@@ -5,44 +5,58 @@ namespace io
 {
 
 const Uint8 *keyboard = SDL_GetKeyboardState(NULL);
-bool pressed_keys[K_TOTAL];
-bool released_keys[K_TOTAL];
-SDL_Event evnt;
+bool pressed_keys[K_TOTAL] = {};
+bool released_keys[K_TOTAL] = {};
+
 
 bool update()
 {
-	for (int i = 0; i < K_TOTAL; i++)
-	{
-		pressed_keys[i]		= false;
-		released_keys[i]	= false;
-	}
+	
 
+	SDL_Event evnt;
 	while (SDL_PollEvent(&evnt))
 	{
+
+		for (int i = 0; i < K_TOTAL; i++)
+		{
+			pressed_keys[i] = false;
+			released_keys[i] = false;
+		}
+
 		switch (evnt.type)
 		{
 		case SDL_QUIT:
-			return false;
-			break;
+		{
+			return false; //quit main loop
+		}	break;
 		case SDL_KEYDOWN:
-			pressed_keys[evnt.key.keysym.scancode] = true;
+		{
+			const KeyScancode key = static_cast<KeyScancode>(evnt.key.keysym.scancode);
 			keyboard = SDL_GetKeyboardState(NULL);
 
-			break;
+			pressed_keys[key] = true;
+			
+		}	break;
 		case SDL_KEYUP:
-			released_keys[evnt.key.keysym.scancode] = true;
+		{
+			const KeyScancode key = static_cast<KeyScancode>(evnt.key.keysym.scancode);
 			keyboard = SDL_GetKeyboardState(NULL);
 
-			break;
+			released_keys[key] = true;
+
+		}	break;
 		case SDL_MOUSEMOTION:
+		{
 
-			break;
+		}	break;
 		case SDL_MOUSEBUTTONDOWN:
+		{
 
-			break;
+		}	break;
 		case SDL_MOUSEBUTTONUP:
+		{
 
-			break;
+		}	break;
 		}
 	}
 	return true;

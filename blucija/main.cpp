@@ -101,7 +101,7 @@ int main(int argc, char **argv)
 
 		gl::draw(the_window_handle);
 
-		SDL_Delay(200);
+		//SDL_Delay(500);
 	}
 
 	cleanup();
