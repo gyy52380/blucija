@@ -27,7 +27,7 @@ GLuint quadIBO;
 
 uint32 n_of_instances_to_draw;
 
-void initCamera(float left, float right, float bottom, float top)
+void init_camera(float left, float right, float bottom, float top)
 {
 	program.use();
 
@@ -42,7 +42,7 @@ void initCamera(float left, float right, float bottom, float top)
 	program.disable();
 }
 
-void createTexture(const char* texture_path, uint8 texture_slot)
+GLuint create_texture(const char* texture_path, uint8 texture_slot)
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
@@ -61,9 +61,10 @@ void createTexture(const char* texture_path, uint8 texture_slot)
 	//glGenerateMipmap(GL_TEXTURE_2D); //no need for mipmaps for 2D, if you include mipmaps change MIN/MAG_FILTER
 
 	stbi_image_free(image_data);
+	return textureID;
 }
 
-void createBaseQuad(float quad_width, float quad_height)
+void create_base_quad(float quad_width, float quad_height)
 {
 	glBindVertexArray(vao);
 
@@ -90,7 +91,7 @@ void createBaseQuad(float quad_width, float quad_height)
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
 }
 
-void updateTranslationBufferData(std::vector<Vertex> const &vertices)
+void update_translation_buffer_data(std::vector<Vertex> const &vertices)
 {
 	n_of_instances_to_draw = vertices.size();
 
@@ -113,7 +114,7 @@ void init(uint32 screen_width, uint32 screen_height)
 	glGenVertexArrays(1, &vao);
 	glBindVertexArray(vao);
 
-	createBaseQuad(1.0f, 1.0f);
+	create_base_quad(1.0f, 1.0f);
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
@@ -126,8 +127,8 @@ void init(uint32 screen_width, uint32 screen_height)
 	glVertexAttribDivisor(2, 1); //maybe attribpointers need to first be enabled for this to work?
 	glVertexAttribDivisor(3, 1);
 
-	initCamera(0, screen_width/20, 0, screen_height/20); //pixels_per_column = 100
-	createTexture("../data/textures/tetris_cubes.png", 0);
+	init_camera(0, screen_width/20, 0, screen_height/20); //pixels_per_column = 100
+	create_texture("../data/textures/tetris_cubes.png", 0);
 
 	//unbind everything
 	glBindVertexArray(0);
@@ -144,7 +145,7 @@ void cleanup()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void clearScreen()
+void clear_screen()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
 	glClearColor(72.0f / 255.0f, 76.0f / 255.0f, 104.0f / 255.0f, 1.0f);
