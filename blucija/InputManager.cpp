@@ -49,7 +49,7 @@ bool update()
 	SDL_Event evnt;
 	for (int i = 0; i < K_TOTAL; i++)
 	{
-		released_keys[i] = pressed_keys[i] || held_keys[i]; //released_keys is correct only after while; or for VERY short press of key
+		released_keys[i] = pressed_keys[i] || held_keys[i]; //this works bcs of for loop after while; or is used for VERY short press of key
 		pressed_keys[i] = false;
 	}
 
