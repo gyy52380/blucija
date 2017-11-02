@@ -3,26 +3,33 @@
 #include <vec2.hpp>
 #include <vector>
 
+#include "E_type.h"
+
 class Entity
 {
 public:
+	
+	//type
+	E_type *type;
 
-	glm::vec2 pos;
+	//for the manager
+	bool is_alive; //manager takes care of this
+
+	//graphics
 	float scale;
-	GLuint textureID;
 	bool orientation_r;
 
+	//logic
+	glm::vec2 pos;
+	int health;
+	int attack;
+	float velocity;
+
+	Entity(E_type *type);
 	Entity();
-	Entity(glm::vec2 pos, float scale, GLuint textureID, bool orientation_r);
 	~Entity();
 
 	void move_to(float x, float y);
 	void move_by(float x, float y);
-
-	static std::vector<Entity*> entity_list;
-	
-	static void add_entity(Entity* to_add);
-	static void remove_entity(Entity* to_remove);
-	static void draw();
 };
 

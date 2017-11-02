@@ -2,16 +2,20 @@
 #include "Entity.h"
 
 
-Entity::Entity() 
-	: pos(glm::vec2(0, 0)), scale(1), textureID(0), orientation_r(true)
+Entity::Entity(E_type *type) :
+	type(type),
+	pos(glm::vec2(0, 0)),
+	scale(type->default_scale),
+	orientation_r(type->default_orientation_r),
+	health(type->default_health),
+	attack(type->default_attack),
+	velocity(type->default_velocity)
 {
 }
 
-Entity::Entity(glm::vec2 pos, float scale, GLuint textureID, bool orientation_r)
-	: pos(pos), scale(scale), textureID(textureID), orientation_r(orientation_r)
+Entity::Entity()
 {
 }
-
 
 Entity::~Entity()
 {
