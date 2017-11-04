@@ -1,4 +1,10 @@
 #pragma once
 #include "EntityType.h"
 
-EntityType* type(ent_type enum_entity_type);
+inline EntityType* type(ent_type enum_entity_type)
+{
+	extern EntityType* init_entity_types();
+	static EntityType *types = init_entity_types();
+
+	return &types[enum_entity_type];
+}

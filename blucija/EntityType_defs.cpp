@@ -59,9 +59,4 @@ EntityType* init_entity_types() //ONLY CALL AFTER OPENGL INIT
 	return types;
 }
 
-EntityType* type(ent_type enum_entity_type)
-{
-	static EntityType *types = init_entity_types();
-	
-	return &types[enum_entity_type];
-}
+
