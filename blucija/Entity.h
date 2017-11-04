@@ -12,9 +12,6 @@ public:
 	//type
 	EntityType *type;
 
-	//for the manager
-	bool is_alive; //REMOVE THIS, USE UKNOWN_TYPE
-
 	//graphics
 	float scale;
 	bool orientation_r;

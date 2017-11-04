@@ -1,6 +1,8 @@
 #include "stdafx.h"
 #include "EntityManager.h"
 
+#include "EntityType_defs.h"
+
 #include <iostream> //for errors, change with errror function later
 
 EntityManager::EntityManager(const int MAX_ENTITIES) : MAX_ENTITIES(MAX_ENTITIES)
@@ -8,7 +10,7 @@ EntityManager::EntityManager(const int MAX_ENTITIES) : MAX_ENTITIES(MAX_ENTITIES
 	for (int i = 0; i < MAX_ENTITIES; i++)
 	{
 		instances.push_back(new Entity());
-		instances.back()->is_alive = false;
+		instances.back()->type = type(UNKNOWN_TYPE);
 	}
 }
 
@@ -25,11 +27,9 @@ Entity* EntityManager::add_entity(EntityType *entity_type_to_init) //this can be
 {
 	for (auto &entity_ptr : instances)
 	{
-		if (entity_ptr->is_alive == false)
+		if (entity_ptr->type->type != UNKNOWN_TYPE)
 		{
 			*entity_ptr = Entity(entity_type_to_init);
-			entity_ptr->is_alive = true;
-
 			return entity_ptr;
 		}
 	}
@@ -41,7 +41,14 @@ Entity* EntityManager::add_entity(EntityType *entity_type_to_init) //this can be
 
 void EntityManager::remove_entity(Entity *entity_to_kill)
 {
-	entity_to_kill->is_alive = false;
-	//define types entity_to_kill->type = unknown_type;
+	entity_to_kill->type = type(UNKNOWN_TYPE);
+}
+
+void EntityManager::update()
+{
+}
+
+void EntityManager::draw()
+{
 }
 

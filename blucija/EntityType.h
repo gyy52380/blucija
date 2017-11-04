@@ -24,7 +24,6 @@ public:
 	float default_orientation_r;
 
 	//logic
-	glm::vec2 default_pos;
 	float default_velocity;
 	int default_health;
 	int default_attack;

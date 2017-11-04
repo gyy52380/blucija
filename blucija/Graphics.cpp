@@ -52,12 +52,16 @@ GLuint create_texture(const char* texture_path)
 	unsigned char *image_data = stbi_load(texture_path, &image_width, &image_height, &n_components, 4);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
+	if (glGetError())
+		printf("Can't load texture: %s; openGL error: %i", texture_path, glGetError());
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	//glGenerateMipmap(GL_TEXTURE_2D); //no need for mipmaps for 2D, if you include mipmaps change MIN/MAG_FILTER
+
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	stbi_image_free(image_data);
 	return textureID;
