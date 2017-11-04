@@ -13,7 +13,7 @@ public:
 	EntityManager(const int MAX_ENTITIES);
 	~EntityManager();
 
-	Entity* add_entity(E_type  *entity_type_to_init);
+	Entity* add_entity(EntityType  *entity_type_to_init);
 	void remove_entity(Entity* entity_to_kill);
 
 	void update();

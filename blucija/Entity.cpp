@@ -2,7 +2,7 @@
 #include "Entity.h"
 
 
-Entity::Entity(E_type *type) :
+Entity::Entity(EntityType *type) :
 	type(type),
 	pos(glm::vec2(0, 0)),
 	scale(type->default_scale),

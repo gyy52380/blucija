@@ -3,17 +3,17 @@
 #include <vec2.hpp>
 #include <vector>
 
-#include "E_type.h"
+#include "EntityType.h"
 
 class Entity
 {
 public:
 	
 	//type
-	E_type *type;
+	EntityType *type;
 
 	//for the manager
-	bool is_alive; //manager takes care of this
+	bool is_alive; //REMOVE THIS, USE UKNOWN_TYPE
 
 	//graphics
 	float scale;
@@ -25,7 +25,7 @@ public:
 	int attack;
 	float velocity;
 
-	Entity(E_type *type);
+	Entity(EntityType *type);
 	Entity();
 	~Entity();
 

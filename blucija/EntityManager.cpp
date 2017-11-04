@@ -21,7 +21,7 @@ EntityManager::~EntityManager()
 }
 
 
-Entity* EntityManager::add_entity(E_type * entity_type_to_init)
+Entity* EntityManager::add_entity(EntityType *entity_type_to_init) //this can be optimised some day
 {
 	for (auto &entity_ptr : instances)
 	{
@@ -35,7 +35,7 @@ Entity* EntityManager::add_entity(E_type * entity_type_to_init)
 	}
 
 	//no more space to init entity
-	std::cout << "Entity Manager can't init Entity, object pool out of space. MAX_ENTITIES = " << MAX_ENTITIES << std::endl;
+	std::cout << "Entity Manager can't init another Entity, object pool out of space. MAX_ENTITIES = " << MAX_ENTITIES << std::endl;
 	return nullptr;
 }
 

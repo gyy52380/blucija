@@ -5,7 +5,8 @@
 
 #pragma once
 
-#include <stdio.h>
+#include <cstdio>
+#include <cassert>
 #include <tchar.h>
 
 #include <SDL.h>

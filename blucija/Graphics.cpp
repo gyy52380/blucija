@@ -42,11 +42,10 @@ void init_camera(float left, float right, float bottom, float top)
 	program.disable();
 }
 
-GLuint create_texture(const char* texture_path, uint8 texture_slot)
+GLuint create_texture(const char* texture_path)
 {
 	GLuint textureID;
 	glGenTextures(1, &textureID);
-	glActiveTexture(GL_TEXTURE0 + texture_slot);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	int image_width, image_height, n_components;
@@ -128,7 +127,7 @@ void init(uint32 screen_width, uint32 screen_height)
 	glVertexAttribDivisor(3, 1);
 
 	init_camera(0, screen_width/20, 0, screen_height/20); //pixels_per_column = 100
-	create_texture("../data/textures/tetris_cubes.png", 0);
+	create_texture("../data/textures/tetris_cubes.png");
 
 	//unbind everything
 	glBindVertexArray(0);

@@ -80,11 +80,11 @@ int main(int argc, char **argv)
 	std::vector<Vertex> vert;
 	vert.push_back(v);
 
-	gl::updateTranslationBufferData(vert);
+	gl::update_translation_buffer_data(vert);
 
 	while (io::update())
 	{
-
+		gl::draw(the_window_handle);
 	}
 
 	cleanup();

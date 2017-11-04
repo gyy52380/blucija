@@ -1,7 +1,8 @@
 #pragma once
 #include <vec2.hpp>
+#include <glew.h>
 
-enum EntityType
+enum ent_type
 {
 	UNKNOWN_TYPE,
 	PLAYER_TYPE,
@@ -11,10 +12,11 @@ enum EntityType
 	TOTAL_TYPES
 };
 
-struct E_type
+class EntityType
 {
+public:
 	//IDs
-	EntityType type;
+	ent_type type;
 	GLuint textureID;
 
 	//graphics stuff
@@ -23,16 +25,13 @@ struct E_type
 
 	//logic
 	glm::vec2 default_pos;
+	float default_velocity;
 	int default_health;
 	int default_attack;
-	float default_velocity;
+	
 
-	E_type(EntityType type, GLuint textureID);
-	~E_type();
+	EntityType(ent_type type);
+	EntityType();
+	~EntityType();
 };
-
-bool operator== (EntityType type, E_type *type_object)
-{
-	return type_object->type == type;
-}
 
