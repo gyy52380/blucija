@@ -11,9 +11,10 @@
 #include "InputManager.h"
 
 #include "Quad.h"
+#include "EntityManager.h"
 
-const uint32 WIDTH = 640;
-const uint32 HEIGHT = 480;
+const uint32 SCREEN_WIDTH = 640;
+const uint32 SCREEN_HEIGHT = 480;
 
 SDL_Window* the_window_handle;
 SDL_GLContext the_gl_context;
@@ -44,7 +45,7 @@ void init()
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetSwapInterval(1); //vsync
 
-	the_window_handle = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, WIDTH, HEIGHT,
+	the_window_handle = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
 										SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!the_window_handle)
 		fatalError("SDL2 failed to create a window!, SDL error: " + (std::string)SDL_GetError());
@@ -56,6 +57,8 @@ void init()
 	glewExperimental = GL_TRUE;
 	if (glewInit())
 		fatalError("Glew failed to initialize!");
+
+	gl::init(SCREEN_WIDTH, SCREEN_HEIGHT);
 }
 
 void cleanup()
@@ -71,16 +74,6 @@ void cleanup()
 int main(int argc, char **argv)
 {
 	init();
-	gl::init(WIDTH, HEIGHT);
-
-	Vertex v;
-	v.pos = glm::vec2(2, 2);
-	v.uv = glm::vec2(0, 0);
-
-	std::vector<Vertex> vert;
-	vert.push_back(v);
-
-	gl::update_translation_buffer_data(vert);
 
 	while (io::update())
 	{

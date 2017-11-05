@@ -6,7 +6,7 @@
 
 EntityType* init_entity_types() //ONLY CALL AFTER OPENGL INIT
 {
-	assert(glewInit() && "OpenGL not initialized!");
+	assert(glewInit() == GLEW_OK && "OpenGL not initialized!");
 
 	static EntityType types[TOTAL_TYPES];
 
@@ -58,5 +58,4 @@ EntityType* init_entity_types() //ONLY CALL AFTER OPENGL INIT
 
 	return types;
 }
-
 

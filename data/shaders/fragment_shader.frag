@@ -1,12 +1,12 @@
 #version 330 core
 
-uniform sampler2D atlasSampler;
+uniform sampler2D texture_sampler;
 
-in vec2 fragmentUV;
+in vec2 frag_uv;
 
-out vec4 outColor;
+out vec4 out_color;
 
 void main()
 {
-	outColor = texture(atlasSampler, fragmentUV);
+	out_color = texture(texture_sampler, frag_uv);
 }

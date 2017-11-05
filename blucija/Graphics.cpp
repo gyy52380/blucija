@@ -1,16 +1,21 @@
 #include "stdafx.h"
 #include "Graphics.h"
-#include "GLProgram.h"
-#include "Quad.h"
+
+#include <glm.hpp>
+#include <gtc/matrix_transform.hpp>
+
+#include <cstddef>
+#include <vector>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-#include <glm.hpp>
-#include <gtc/matrix_transform.hpp>
-#include <cstddef>
-#include <vector>
+#include "GLProgram.h"
+#include "Vertex.h"
+#include "Quad.h"
+#include "Entity.h"
 
+// for debugging, replace later with logging
 #include <iostream>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx\string_cast.hpp>
@@ -18,28 +23,136 @@
 namespace gl
 {
 
-GLProgram program;
+typedef std::pair<GLuint, std::vector<glm::vec2>> render_pair;
+std::vector<render_pair> render_batches;
+
+GLProgram shader_program;
 
 GLuint vao;
-GLuint vbo;
-GLuint quadVBO;
-GLuint quadIBO;
-
-uint32 n_of_instances_to_draw;
+GLuint quad_vbo;
+GLuint translation_vbo;
 
 void init_camera(float left, float right, float bottom, float top)
 {
-	program.use();
+	shader_program.use();
 
 	glm::mat4 cameraMatrix = glm::ortho(left, right, bottom, top);
-	GLint cameraLocation = program.setUniformLocation("cameraMatrix");
+	GLint cameraLocation = shader_program.setUniformLocation("camera_matrix");
 
 	if (cameraLocation == -1)
 		printf("Can't create uniform location for camera matrix\n");
 	else
 		glUniformMatrix4fv(cameraLocation, 1, GL_FALSE, &cameraMatrix[0][0]);
 
-	program.disable();
+	shader_program.disable();
+}
+
+void create_instance_quad(float q_width, float q_height, GLuint *quad_vbo)
+{
+	Quad instance_quad(q_width, q_height);
+	instance_quad.bottomLeft.uv		= glm::vec2(0, 0);
+	instance_quad.bottomRight.uv	= glm::vec2(1, 0);
+	instance_quad.topLeft.uv		= glm::vec2(0, 1);
+	instance_quad.topRight.uv		= glm::vec2(1, 1);
+
+	Vertex quad_vertices[6] =
+	{
+		instance_quad.bottomLeft,
+		instance_quad.topLeft,
+		instance_quad.bottomRight,
+
+		instance_quad.bottomRight,
+		instance_quad.topLeft,
+		instance_quad.topRight
+	};
+
+	glGenBuffers(1, quad_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, *quad_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(quad_vertices), quad_vertices, GL_STATIC_DRAW); //sizeof(quad_vertices) == sizeof(Vertex) * 6
+
+	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void init(uint32 screen_width, uint32 screen_height)
+{
+	shader_program.addShader("../data/shaders/vertex_shader.vert", GL_VERTEX_SHADER);
+	shader_program.addShader("../data/shaders/fragment_shader.frag", GL_FRAGMENT_SHADER);
+	shader_program.compile();
+
+	glGenVertexArrays(1, &vao);
+	glBindVertexArray(vao);
+
+	//quad
+	create_instance_quad(1.0f, 1.0f, &quad_vbo);
+	//quad
+
+	glGenBuffers(1, &translation_vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, translation_vbo);
+
+	//call fillbuffer() from elsewhere
+
+	//set array attribs for translation vectors changing once per instance
+	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
+	glVertexAttribDivisor(2, 1);
+
+	init_camera(0, screen_width/200, 0, screen_height/200); //pixels_per_column = 20?
+
+	//unbind everything
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+}
+
+void clear_screen()
+{
+	static float background_color[4] =
+	{ 72.0f / 255.0f, 76.0f / 255.0f, 104.0f / 255.0f, 1.0f };
+
+	glClear(GL_COLOR_BUFFER_BIT);
+	glClearColor(background_color[0], background_color[1], background_color[2], background_color[3]);
+}
+
+void add_batch(std::vector<glm::vec2> trans_vec, GLuint textureID)
+{
+	render_batches.push_back(render_pair(textureID, trans_vec));
+}
+
+void draw(SDL_Window *window_handle)
+{
+	clear_screen();
+
+	glBindVertexArray(vao);
+	shader_program.use();
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glBindBuffer(GL_ARRAY_BUFFER, translation_vbo);
+	
+	for (auto &batch : render_batches)
+	{
+		glBindTexture(GL_TEXTURE_2D, batch.first);
+		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * batch.second.size(), batch.second.data(), GL_STATIC_DRAW); //maybe dynamic
+
+		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, batch.second.size());
+
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
+
+	SDL_GL_SwapWindow(window_handle);
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	shader_program.disable();
+
+	render_batches.clear();
 }
 
 GLuint create_texture(const char* texture_path)
@@ -62,113 +175,17 @@ GLuint create_texture(const char* texture_path)
 	//glGenerateMipmap(GL_TEXTURE_2D); //no need for mipmaps for 2D, if you include mipmaps change MIN/MAG_FILTER
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-
 	stbi_image_free(image_data);
+
 	return textureID;
-}
-
-void create_base_quad(float quad_width, float quad_height)
-{
-	glBindVertexArray(vao);
-
-	//make & fill element buffer
-	uint8 indices[6] = { 0, 1, 2, 1, 2, 3 };
-
-	glGenBuffers(1, &quadIBO);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, quadIBO);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(uint8) * 6, indices, GL_STATIC_DRAW);
-
-	//make & fill vertex buffer
-	Quad baseQuad;
-	baseQuad.init(glm::vec2(0, 0), quad_width, quad_height);
-	baseQuad.setUV(glm::vec2(0, 0), 16, 16);
-	Vertex quadVertices[4] =
-	{ baseQuad.bottomLeft, baseQuad.bottomRight, baseQuad.topLeft, baseQuad.topRight };
-
-	glGenBuffers(1, &quadVBO);
-	glBindBuffer(GL_ARRAY_BUFFER, quadVBO);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * 4, quadVertices, GL_STATIC_DRAW);
-
-	//set the array attribs for constant quad vertices
-	glVertexAttribPointer(0, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-}
-
-void update_translation_buffer_data(std::vector<Vertex> const &vertices)
-{
-	n_of_instances_to_draw = vertices.size();
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	glBufferData(GL_ARRAY_BUFFER, sizeof(Vertex) * vertices.size(), vertices.data(), GL_DYNAMIC_DRAW);
-
-	//unbind everything
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-}
-
-void init(uint32 screen_width, uint32 screen_height)
-{
-	program.addShader("../data/shaders/vertex_shader.vert", GL_VERTEX_SHADER);
-	program.addShader("../data/shaders/fragment_shader.frag", GL_FRAGMENT_SHADER);
-	program.compile();
-
-	glGenVertexArrays(1, &vao);
-	glBindVertexArray(vao);
-
-	create_base_quad(1.0f, 1.0f);
-
-	glGenBuffers(1, &vbo);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	//call fillbuffer() from elsewhere
-
-	//set array attribs for translation vectors changing once per instance
-	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, pos));
-	glVertexAttribPointer(3, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, uv));
-	glVertexAttribDivisor(2, 1); //maybe attribpointers need to first be enabled for this to work?
-	glVertexAttribDivisor(3, 1);
-
-	init_camera(0, screen_width/20, 0, screen_height/20); //pixels_per_column = 100
-	create_texture("../data/textures/tetris_cubes.png");
-
-	//unbind everything
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
 
 void cleanup()
 {
-	program.destroy();
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &quadVBO);
-	glDeleteBuffers(1, &quadIBO);
+	shader_program.destroy();
+	glDeleteBuffers(1, &translation_vbo);
+	glDeleteBuffers(1, &quad_vbo);
 	glDeleteVertexArrays(1, &vao);
-}
-
-void clear_screen()
-{
-	glClear(GL_COLOR_BUFFER_BIT);
-	glClearColor(72.0f / 255.0f, 76.0f / 255.0f, 104.0f / 255.0f, 1.0f);
-}
-
-void draw(SDL_Window *window_handle)
-{
-	glBindVertexArray(vao);
-	program.use();
-
-	for (int i = 0; i <= 3; ++i) glEnableVertexAttribArray(i);
-
-	glDrawElementsInstanced(GL_TRIANGLES, 6, GL_UNSIGNED_BYTE, (void*)0, n_of_instances_to_draw);
-
-	SDL_GL_SwapWindow(window_handle);
-
-	for (int i = 0; i <= 3; ++i) glDisableVertexAttribArray(i);
-
-	glBindVertexArray(0);
-	program.disable();
 }
 
 }

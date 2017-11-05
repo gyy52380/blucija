@@ -20,3 +20,13 @@ EntityType::EntityType()
 EntityType::~EntityType()
 {
 }
+
+bool operator== (EntityType *entity_type_ptr, ent_type entity_type_enum)
+{
+	return entity_type_ptr->type == entity_type_enum;
+}
+
+bool operator!= (EntityType *entity_type_ptr, ent_type entity_type_enum)
+{
+	return entity_type_ptr->type != entity_type_enum;
+}

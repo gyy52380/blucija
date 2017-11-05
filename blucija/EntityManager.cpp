@@ -1,36 +1,31 @@
 #include "stdafx.h"
 #include "EntityManager.h"
 
-#include "EntityType_defs.h"
-
+#include <vec2.hpp>
 #include <iostream> //for errors, change with errror function later
+
+#include "EntityType_defs.h"
+#include "Graphics.h"
+
 
 EntityManager::EntityManager(const int MAX_ENTITIES) : MAX_ENTITIES(MAX_ENTITIES)
 {
-	for (int i = 0; i < MAX_ENTITIES; i++)
-	{
-		instances.push_back(new Entity());
-		instances.back()->type = type(UNKNOWN_TYPE);
-	}
+	instances = std::vector<Entity>(MAX_ENTITIES, Entity(type(UNKNOWN_TYPE)));
 }
 
 EntityManager::~EntityManager()
 {
-	for (auto &entity_ptr : instances)
-		delete entity_ptr;
-
-	instances.clear();
 }
 
 
-Entity* EntityManager::add_entity(EntityType *entity_type_to_init) //this can be optimised some day
+Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be optimised some day
 {
-	for (auto &entity_ptr : instances)
+	for (auto &entity : instances)
 	{
-		if (entity_ptr->type->type != UNKNOWN_TYPE)
+		if (entity.type == UNKNOWN_TYPE)
 		{
-			*entity_ptr = Entity(entity_type_to_init);
-			return entity_ptr;
+			entity = Entity(type(entity_type_to_init));
+			return &entity;
 		}
 	}
 
@@ -41,7 +36,7 @@ Entity* EntityManager::add_entity(EntityType *entity_type_to_init) //this can be
 
 void EntityManager::remove_entity(Entity *entity_to_kill)
 {
-	entity_to_kill->type = type(UNKNOWN_TYPE);
+	*entity_to_kill = Entity(type(UNKNOWN_TYPE)); //this makes a new default UNKNOWN_TYPE entity. maybe just change the type?
 }
 
 void EntityManager::update()
@@ -50,5 +45,32 @@ void EntityManager::update()
 
 void EntityManager::draw()
 {
+	std::sort(instances.begin(), instances.end(),
+		[](const Entity &entity1, const Entity &entity2) -> bool 
+		{ return entity1.type->textureID < entity2.type->textureID; });
+
+	std::vector<glm::vec2> translation_vec;
+	GLuint bound_texture = instances[0].type->textureID;
+
+	for (Entity &entity : instances)
+	{
+		if (entity.type == UNKNOWN_TYPE)
+			continue;
+		if (bound_texture == type(UNKNOWN_TYPE)->textureID)
+			bound_texture = entity.type->textureID; //first texture other than 0
+
+		if (entity.type->textureID == bound_texture)
+		{
+			translation_vec.push_back(entity.pos);
+		}
+		else
+		{
+			gl::add_batch(translation_vec, bound_texture);
+			translation_vec.clear();
+			translation_vec.push_back(entity.pos);
+			bound_texture = entity.type->textureID;
+		}
+	}
+	gl::add_batch(translation_vec, bound_texture);
 }
 
