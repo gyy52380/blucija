@@ -3,6 +3,8 @@
 
 #include <iostream>
 
+#include "typedef.h"
+
 namespace io
 {
 

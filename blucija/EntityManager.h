@@ -19,6 +19,9 @@ public:
 	void update();
 	void draw();
 
+	void get_input();
+
 	std::vector<Entity> instances;
+	Entity &player;
 };
 

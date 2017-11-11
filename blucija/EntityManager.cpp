@@ -6,11 +6,14 @@
 
 #include "EntityType_defs.h"
 #include "Graphics.h"
+#include "InputManager.h"
 
 
-EntityManager::EntityManager(const int MAX_ENTITIES) : MAX_ENTITIES(MAX_ENTITIES)
+EntityManager::EntityManager(const int MAX_ENTITIES) :
+	MAX_ENTITIES(MAX_ENTITIES),
+	instances(std::vector<Entity>(MAX_ENTITIES, Entity(type(UNKNOWN_TYPE)))),
+	player(instances[0])
 {
-	instances = std::vector<Entity>(MAX_ENTITIES, Entity(type(UNKNOWN_TYPE)));
 }
 
 EntityManager::~EntityManager()
@@ -41,6 +44,16 @@ void EntityManager::remove_entity(Entity *entity_to_kill)
 
 void EntityManager::update()
 {
+	get_input();
+
+	player.move_by(player.velocity, 0);
+}
+
+void EntityManager::get_input()
+{
+	if		(io::is_key_held(K_A)) player.velocity	= -0.0001f;
+	else if (io::is_key_held(K_D)) player.velocity	= 0.0001f;
+	else	player.velocity = 0;
 }
 
 void EntityManager::draw()

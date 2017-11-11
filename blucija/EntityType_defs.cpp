@@ -29,7 +29,7 @@ EntityType* init_entity_types() //ONLY CALL AFTER OPENGL INIT
 	types[PLAYER_TYPE].default_scale = 1.0f;
 	types[PLAYER_TYPE].default_orientation_r = true;
 
-	types[PLAYER_TYPE].default_velocity = 1.0f;
+	types[PLAYER_TYPE].default_velocity = 0.0f;
 	types[PLAYER_TYPE].default_health = 20;
 	types[PLAYER_TYPE].default_attack = 5;
 

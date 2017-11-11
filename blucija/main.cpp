@@ -58,7 +58,7 @@ void init()
 	if (glewInit())
 		fatalError("Glew failed to initialize!");
 
-	gl::init(SCREEN_WIDTH, SCREEN_HEIGHT);
+	gl::init(8, 8); //amount of quads in direction
 }
 
 void cleanup()
@@ -75,8 +75,15 @@ int main(int argc, char **argv)
 {
 	init();
 
+	EntityManager manager(1);
+	manager.add_entity(PLAYER_TYPE);
+	manager.player.move_to(0, 0);
+
 	while (io::update())
 	{
+		manager.update();
+		manager.draw();
+
 		gl::draw(the_window_handle);
 	}
 

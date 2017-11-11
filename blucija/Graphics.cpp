@@ -76,7 +76,7 @@ void create_instance_quad(float q_width, float q_height, GLuint *quad_vbo)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
-void init(uint32 screen_width, uint32 screen_height)
+void init(uint32 camera_scale_x, uint32 camera_scale_y)
 {
 	shader_program.addShader("../data/shaders/vertex_shader.vert", GL_VERTEX_SHADER);
 	shader_program.addShader("../data/shaders/fragment_shader.frag", GL_FRAGMENT_SHADER);
@@ -98,7 +98,7 @@ void init(uint32 screen_width, uint32 screen_height)
 	glVertexAttribPointer(2, 2, GL_FLOAT, GL_FALSE, sizeof(float) * 2, (void*)0);
 	glVertexAttribDivisor(2, 1);
 
-	init_camera(0, screen_width/200, 0, screen_height/200); //pixels_per_column = 20?
+	init_camera(0, camera_scale_x, 0, camera_scale_y); //pixels_per_column = 20?
 
 	//unbind everything
 	glBindVertexArray(0);
@@ -141,6 +141,7 @@ void draw(SDL_Window *window_handle)
 
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
+	render_batches.clear();
 
 	SDL_GL_SwapWindow(window_handle);
 
@@ -151,8 +152,6 @@ void draw(SDL_Window *window_handle)
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	shader_program.disable();
-
-	render_batches.clear();
 }
 
 GLuint create_texture(const char* texture_path)

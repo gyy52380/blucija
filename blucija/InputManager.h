@@ -56,6 +56,18 @@ enum Mousecode
 	M_TOTAL
 };
 
+enum Actions
+{
+	MOVE_L,
+	MOVE_R,
+	MOVE_U,
+	MOVE_D,
+	JUMP,
+	ATTACK,
+
+	ACTION_TOTAL
+};
+
 namespace io
 {
 
