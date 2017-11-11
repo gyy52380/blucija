@@ -3,6 +3,7 @@
 
 enum Keycode
 {
+	UNKNOWN_KEY,
 	K_1,
 	K_2,
 	K_3,

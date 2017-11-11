@@ -43,6 +43,9 @@ Keycode convert_sdlk_to_keycode(SDL_Keycode keycode)
 	case SDLK_d:
 		return K_D;
 		break;
+	default:
+		return UNKNOWN_KEY;
+		break;
 	}
 }
 
