@@ -4,7 +4,7 @@
 #include <vec2.hpp>
 #include <iostream> //for errors, change with errror function later
 
-#include "EntityType_defs.h"
+#include "EntityType.h"
 #include "Graphics.h"
 #include "InputManager.h"
 
@@ -46,14 +46,14 @@ void EntityManager::update()
 {
 	get_input();
 
-	player.move_by(player.velocity, 0);
+	player.move_by(player.velocity_x, 0);
 }
 
 void EntityManager::get_input()
 {
-	if		(io::is_key_held(K_A)) player.velocity	= -0.0001f;
-	else if (io::is_key_held(K_D)) player.velocity	= 0.0001f;
-	else	player.velocity = 0;
+	if		(io::is_key_held(K_A)) player.velocity_x	= -0.0001f;
+	else if (io::is_key_held(K_D)) player.velocity_x	= 0.0001f;
+	else	player.velocity_x = 0;
 }
 
 void EntityManager::draw()

@@ -20,7 +20,8 @@ public:
 	glm::vec2 pos;
 	int health;
 	int attack;
-	float velocity;
+	float velocity_x;
+	float velocity_y;
 
 	Entity(EntityType *type);
 	Entity();
@@ -28,5 +29,15 @@ public:
 
 	void move_to(float x, float y);
 	void move_by(float x, float y);
+};
+
+class EntityInteractive : Entity
+{
+public:
+	//logic
+	int health;
+	int attack;
+	float velocity_x;
+	float velocity_y;
 };
 

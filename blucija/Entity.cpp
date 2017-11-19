@@ -9,7 +9,7 @@ Entity::Entity(EntityType *type) :
 	orientation_r(type->default_orientation_r),
 	health(type->default_health),
 	attack(type->default_attack),
-	velocity(type->default_velocity)
+	velocity_x(type->default_velocity_x)
 {
 }
 
