@@ -22,6 +22,7 @@ public:
 	void get_input();
 
 	std::vector<Entity*> instances;
-	inline Entity* player() { return instances[0]; }
+	
 };
 
+#define player instances[0] //change this discusting thing

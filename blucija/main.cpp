@@ -76,8 +76,7 @@ int main(int argc, char **argv)
 	init();
 
 	EntityManager manager(1);
-	manager.add_entity(PLAYER_TYPE);
-	manager.player.move_to(0, 0);
+	manager.player->move_to(0, 0);
 
 	while (io::update())
 	{

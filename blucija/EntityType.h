@@ -1,4 +1,4 @@
-#pragma once
+ #pragma once
 #include <vec2.hpp>
 #include <glew.h>
 
@@ -34,17 +34,16 @@ public:
 	EntityType();
 	~EntityType();
 	
-	static inline EntityType* get_type(ent_type enum_entity_type)
-	{
-		static EntityType *inited_types = init_entity_types();
-		return &inited_types[enum_entity_type];
-	}
-
-private:
 	static EntityType* init_entity_types(); //this is only called once
 };
 
-const auto &type = EntityType::get_type; //alias bcs too long
+static inline EntityType* type(ent_type enum_entity_type)
+{
+	static EntityType *inited_types = EntityType::init_entity_types();
+	return &inited_types[enum_entity_type];
+}
+
+//const auto &type = get_type; //alias bcs too long
 
 bool operator== (EntityType *entity_type_ptr, ent_type entity_type_enum);
 bool operator!= (EntityType *entity_type_ptr, ent_type entity_type_enum);

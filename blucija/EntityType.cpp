@@ -1,4 +1,5 @@
 #include "stdafx.h"
+
 #include "EntityType.h"
 #include "Graphics.h"
 
