@@ -21,7 +21,7 @@ public:
 
 	void get_input();
 
-	std::vector<Entity> instances;
-	Entity &player;
+	std::vector<Entity*> instances;
+	inline Entity* player() { return instances[0]; }
 };
 

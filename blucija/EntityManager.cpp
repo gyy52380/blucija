@@ -11,13 +11,18 @@
 
 EntityManager::EntityManager(const int MAX_ENTITIES) :
 	MAX_ENTITIES(MAX_ENTITIES),
-	instances(std::vector<Entity>(MAX_ENTITIES, Entity(type(UNKNOWN_TYPE)))),
-	player(instances[0])
+	instances(MAX_ENTITIES)
 {
+	for (auto &entity_to_allocate : instances)
+		entity_to_allocate = new Entity(type(UNKNOWN_TYPE));
+
+	player()->type = type(PLAYER_TYPE);
 }
 
 EntityManager::~EntityManager()
 {
+	for (auto &entity_to_free : instances)
+		delete entity_to_free;
 }
 
 
@@ -25,10 +30,10 @@ Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be op
 {
 	for (auto &entity : instances)
 	{
-		if (entity.type == UNKNOWN_TYPE)
+		if (entity->type == UNKNOWN_TYPE)
 		{
-			entity = Entity(type(entity_type_to_init));
-			return &entity;
+			*entity = Entity(type(entity_type_to_init));
+			return entity;
 		}
 	}
 
@@ -39,21 +44,20 @@ Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be op
 
 void EntityManager::remove_entity(Entity *entity_to_kill)
 {
-	*entity_to_kill = Entity(type(UNKNOWN_TYPE)); //this makes a new default UNKNOWN_TYPE entity. maybe just change the type?
+	entity_to_kill->type = type(UNKNOWN_TYPE); //just change the type ptr. all other params stay as before the entity "died"
 }
 
 void EntityManager::update()
 {
 	get_input();
-
-	player.move_by(player.velocity_x, 0);
+	player()->move_by(player()->velocity_x, player()->velocity_y);
 }
 
 void EntityManager::get_input()
 {
-	if		(io::is_key_held(K_A)) player.velocity_x	= -0.0001f;
-	else if (io::is_key_held(K_D)) player.velocity_x	= 0.0001f;
-	else	player.velocity_x = 0;
+	if		(io::is_key_held(K_A)) player()->velocity_x	= -0.0001f;
+	else if (io::is_key_held(K_D)) player()->velocity_x	= 0.0001f;
+	else	player()->velocity_x = 0;
 }
 
 void EntityManager::draw()
