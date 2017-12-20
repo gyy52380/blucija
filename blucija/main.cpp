@@ -13,6 +13,10 @@
 #include "Quad.h"
 #include "EntityManager.h"
 
+#include <glm.hpp>
+#define GLM_ENABLE_EXPERIMENTAL
+#include <gtx\string_cast.hpp>
+
 const uint32 SCREEN_WIDTH = 640;
 const uint32 SCREEN_HEIGHT = 480;
 
@@ -75,8 +79,17 @@ int main(int argc, char **argv)
 {
 	init();
 
+	using namespace glm;
+	vec2 x1(1, 1);
+	vec2 x2(2, 2);
+	float a = 0.0f;
+	vec2 x = mix(x1, x2, a);
+	std::cout << to_string(x) << std::endl;
+
+
 	EntityManager manager(1);
-	manager.player->move_to(0, 0);
+	auto player = manager.add_entity(PLAYER_TYPE);
+	player->move_to(0, 0);
 
 	while (io::update())
 	{

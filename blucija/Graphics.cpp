@@ -147,16 +147,16 @@ void draw(SDL_Window *window_handle)
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
+	glDisableVertexAttribArray(2);
 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	shader_program.disable();
 }
 
-GLuint create_texture(const char* texture_path)
+textureID create_texture(const char* texture_path)
 {
-	GLuint textureID;
+	textureID textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 

@@ -8,6 +8,8 @@
 #include "Graphics.h"
 #include "InputManager.h"
 
+#define _player instances[0]
+
 
 EntityManager::EntityManager(const int MAX_ENTITIES) :
 	MAX_ENTITIES(MAX_ENTITIES),
@@ -16,7 +18,7 @@ EntityManager::EntityManager(const int MAX_ENTITIES) :
 	for (auto &entity_to_allocate : instances)
 		entity_to_allocate = new Entity(type(UNKNOWN_TYPE));
 
-	player->type = type(PLAYER_TYPE);
+	_player->type = type(PLAYER_TYPE);
 }
 
 EntityManager::~EntityManager()
@@ -28,6 +30,9 @@ EntityManager::~EntityManager()
 
 Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be optimised some day
 {
+	if (entity_type_to_init == PLAYER_TYPE)
+		return _player;
+
 	for (auto &entity : instances)
 	{
 		if (entity->type == UNKNOWN_TYPE)
@@ -50,14 +55,14 @@ void EntityManager::remove_entity(Entity *entity_to_kill)
 void EntityManager::update()
 {
 	get_input();
-	player->move_by(player->velocity_x, player->velocity_y);
+	_player->move_by(_player->velocity_x, _player->velocity_y);
 }
 
 void EntityManager::get_input()
 {
-	if		(io::is_key_held(K_A)) player->velocity_x	= -0.0001f;
-	else if (io::is_key_held(K_D)) player->velocity_x	= 0.0001f;
-	else	player->velocity_x = 0;
+	if		(io::is_key_held(K_A)) _player->velocity_x	= -0.0001f;
+	else if (io::is_key_held(K_D)) _player->velocity_x	= 0.0001f;
+	else	_player->velocity_x = 0;
 }
 
 void EntityManager::draw()

@@ -25,4 +25,4 @@ public:
 	
 };
 
-#define player instances[0] //change this discusting thing
+
