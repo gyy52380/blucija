@@ -20,8 +20,7 @@ public:
 	glm::vec2 pos;
 	int health;
 	int attack;
-	float velocity_x;
-	float velocity_y;
+	glm::vec2 velocity;
 
 	Entity(EntityType *type);
 	Entity();

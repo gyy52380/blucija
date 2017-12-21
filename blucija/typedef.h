@@ -1,7 +1,6 @@
 #pragma once
 
 #include <cinttypes>
-#include <gl\GL.h>
 
 typedef uint8_t		uint8;
 typedef uint16_t	uint16;
@@ -11,5 +10,5 @@ typedef int16_t		int16;
 typedef int32_t		int32;
 typedef int64_t		int64;
 
-typedef GLuint	textureID;
-typedef uint32	assetID;
+typedef uint32	texture_ID;
+typedef uint32	asset_ID;

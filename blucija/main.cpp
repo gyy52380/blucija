@@ -88,7 +88,7 @@ int main(int argc, char **argv)
 
 
 	EntityManager manager(1);
-	auto player = manager.add_entity(PLAYER_TYPE);
+	auto player = manager.add_entity(TYPE_PLAYER);
 	player->move_to(0, 0);
 
 	while (io::update())

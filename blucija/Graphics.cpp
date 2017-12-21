@@ -154,9 +154,40 @@ void draw(SDL_Window *window_handle)
 	shader_program.disable();
 }
 
-textureID create_texture(const char* texture_path)
+void draw_quads(SDL_Window *window_to_draw, texture_ID texID, glm::vec2 *array_ptr, uint32 n_elements)
 {
-	textureID textureID;
+	glBindVertexArray(vao);
+	shader_program.use();
+
+	glEnableVertexAttribArray(0);
+	glEnableVertexAttribArray(1);
+	glEnableVertexAttribArray(2);
+
+	////
+	glBindBuffer(GL_ARRAY_BUFFER, translation_vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * n_elements,
+		array_ptr, GL_DYNAMIC_DRAW);
+
+	glBindTexture(GL_TEXTURE_2D, texID);
+
+	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, n_elements);
+	SDL_GL_SwapWindow(window_to_draw);
+
+	glBindTexture(GL_TEXTURE_2D, 0);
+	////
+
+	glDisableVertexAttribArray(0);
+	glDisableVertexAttribArray(1);
+	glDisableVertexAttribArray(2);
+
+	glBindVertexArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	shader_program.disable();
+}
+
+texture_ID create_texture(const char* texture_path)
+{
+	texture_ID textureID;
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 

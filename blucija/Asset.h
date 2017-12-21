@@ -3,24 +3,32 @@
 
 #include "typedef.h"
 
+enum asst_type
+{
+	ASST_UNKNOWN,
+	ASST_TEXTURE,
+	ASST_SOUND,
 
-typedef uint32 assetID;
+	ASST_TOTAL
+};
 
 class Asset
 {
 public:
 
-	assetID id;
+	asst_type type = ASST_UNKNOWN;
+	asset_ID id;
 
+	Asset(asst_type type_to_set);
 	Asset();
 	~Asset();
 
 	void bind_texture(const char *texture_path);
-	void bind_texture(textureID texID);
-	inline textureID get_textureID() { return textureIDs[this->id]; }
+	void bind_textureID(texture_ID texID);
+	inline texture_ID get_textureID() { return textureIDs[this->id]; }
 
-	static assetID id_count;
-	static std::vector<textureID> textureIDs; //index == assetID, value == textureID
+	static asset_ID id_count;
+	static std::vector<texture_ID> textureIDs; //index == assetID, value == textureID
 
 };
 
