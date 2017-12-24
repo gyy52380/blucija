@@ -13,6 +13,8 @@ public:
 	int		height;
 	int 	channels;
 	uint8*	data;
+
+	uint32	id;
 	uint32	gl_id = 0; //uninitialized
 
 
@@ -27,6 +29,7 @@ public:
 	void bind_texture(int slot = 0);
 
 	static string path_prefix;
+	static uint32 texture_count;
 
 	inline string path() { return path_prefix + short_path; }
 };

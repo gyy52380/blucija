@@ -10,14 +10,15 @@
 using std::string;
 
 string Texture::path_prefix = "../data/textures/";
+uint32 Texture::texture_count = 0;
 
-Texture::Texture()
+Texture::Texture() : id(texture_count++)
 {
 }
 
 Texture::~Texture()
 {
-	destroy_opengl_texture();
+	destroy_opengl_texture(); //THIS CAN FUCK YOU UP
 }
 
 void Texture::load_texture(string path)
@@ -36,7 +37,7 @@ void Texture::load_texture(string path)
 void Texture::free_image_data()
 {
 	stbi_image_free(this->data);
-	std::cout << "Freed image data: " << path() << std::endl;
+	std::cout << "Freed image data: " << this->path() << std::endl;
 }
 
 void Texture::create_opengl_texture()

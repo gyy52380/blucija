@@ -2,14 +2,15 @@
 #include "Entity.h"
 
 
-Entity::Entity(EntityType *type) :
-	type(type),
+Entity::Entity(EntityType *entity_type) :
+	type(entity_type->type),
+	entity_type(entity_type),
 	pos(glm::vec2(0, 0)),
-	scale(type->default_scale),
-	orientation_r(type->default_orientation_r),
-	health(type->default_health),
-	attack(type->default_attack),
-	velocity(type->default_velocity)
+	scale(entity_type->default_scale),
+	orientation_r(entity_type->default_orientation_r),
+	health(entity_type->default_health),
+	attack(entity_type->default_attack),
+	velocity(entity_type->default_velocity)
 {
 }
 

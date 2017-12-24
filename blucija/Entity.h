@@ -10,7 +10,8 @@ class Entity
 public:
 	
 	//type
-	EntityType *type;
+	ent_type type;
+	EntityType *entity_type;
 
 	//graphics
 	float scale;
@@ -22,7 +23,7 @@ public:
 	int attack;
 	glm::vec2 velocity;
 
-	Entity(EntityType *type);
+	Entity(EntityType *entity_type);
 	Entity();
 	~Entity();
 

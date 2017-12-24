@@ -20,7 +20,7 @@ EntityManager::EntityManager(const int MAX_ENTITIES) :
 	for (auto &entity_to_allocate : instances)
 		entity_to_allocate = new Entity(type(TYPE_UNKNOWN));
 
-	player_->type = type(TYPE_PLAYER);
+	player_->entity_type = type(TYPE_PLAYER);
 }
 
 EntityManager::~EntityManager()
@@ -37,7 +37,7 @@ Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be op
 
 	for (auto &entity : instances)
 	{
-		if (entity->type == TYPE_UNKNOWN)
+		if (entity->entity_type == TYPE_UNKNOWN)
 		{
 			*entity = Entity(type(entity_type_to_init));
 			return entity;
@@ -51,7 +51,7 @@ Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be op
 
 void EntityManager::remove_entity(Entity *entity_to_kill)
 {
-	entity_to_kill->type = type(TYPE_UNKNOWN); //just change the type ptr. all other params stay as before the entity "died"
+	entity_to_kill->entity_type = type(TYPE_UNKNOWN); //just change the type ptr. all other params stay as before the entity "died"
 }
 
 void EntityManager::update()
@@ -71,20 +71,20 @@ void EntityManager::draw()
 {
 	std::sort(instances.begin(), instances.end(),
 		[](const Entity* entity1, const Entity* entity2) -> bool 
-	{ return entity1->type->texture->gl_id < entity2->type->texture->gl_id; });
+	{ return entity1->entity_type->texture->gl_id < entity2->entity_type->texture->gl_id; });
 
 	std::vector<glm::vec2> translation_vec;
-	GLuint bound_texture = player_->type->texture->gl_id; //because player_ == instances[0]
+	GLuint bound_texture = player_->entity_type->texture->gl_id; //because player_ == instances[0]
 
 	for (Entity *entity : instances)
 	{
-		if (entity->type == TYPE_UNKNOWN)
-			continue;
+		bound_texture = entity->entity_type->texture->gl_id;
 
 		if (bound_texture == type(TYPE_UNKNOWN)->texture->gl_id)
-			bound_texture = entity->type->texture->gl_id; //first texture other than 0
+			continue;
+		//first texture other than 0
 
-		if (entity->type->texture->gl_id == bound_texture)
+		if (entity->entity_type->texture->gl_id == bound_texture)
 		{
 			translation_vec.push_back(entity->pos);
 		}
@@ -93,7 +93,7 @@ void EntityManager::draw()
 			gl::add_batch(translation_vec, bound_texture);
 			translation_vec.clear();
 			translation_vec.push_back(entity->pos);
-			bound_texture = entity->type->texture->gl_id;
+			bound_texture = entity->entity_type->texture->gl_id;
 		}
 	}
 	gl::add_batch(translation_vec, bound_texture);
