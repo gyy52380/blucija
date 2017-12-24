@@ -7,9 +7,6 @@
 #include <cstddef>
 #include <vector>
 
-#define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"
-
 #include "GLProgram.h"
 #include "Vertex.h"
 #include "Quad.h"
@@ -154,7 +151,7 @@ void draw(SDL_Window *window_handle)
 	shader_program.disable();
 }
 
-void draw_quads(SDL_Window *window_to_draw, texture_ID texID, glm::vec2 *array_ptr, uint32 n_elements)
+void draw_quads(SDL_Window *window_to_draw, GLuint texID, glm::vec2 *array_ptr, uint32 n_elements)
 {
 	glBindVertexArray(vao);
 	shader_program.use();
@@ -183,31 +180,6 @@ void draw_quads(SDL_Window *window_to_draw, texture_ID texID, glm::vec2 *array_p
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	shader_program.disable();
-}
-
-texture_ID create_texture(const char* texture_path)
-{
-	texture_ID textureID;
-	glGenTextures(1, &textureID);
-	glBindTexture(GL_TEXTURE_2D, textureID);
-
-	int image_width, image_height, n_components;
-	unsigned char *image_data = stbi_load(texture_path, &image_width, &image_height, &n_components, 4);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, image_width, image_height, 0, GL_RGBA, GL_UNSIGNED_BYTE, image_data);
-	if (glGetError())
-		printf("Can't load texture: %s; openGL error: %i", texture_path, glGetError());
-
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	//glGenerateMipmap(GL_TEXTURE_2D); //no need for mipmaps for 2D, if you include mipmaps change MIN/MAG_FILTER
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-	stbi_image_free(image_data);
-
-	return textureID;
 }
 
 void cleanup()

@@ -7,8 +7,10 @@
 #include "EntityType.h"
 #include "Graphics.h"
 #include "InputManager.h"
+#include "typedef.h"
+#include "Texture.h"
 
-#define _player instances[0]
+#define player_ instances[0]
 
 
 EntityManager::EntityManager(const int MAX_ENTITIES) :
@@ -18,7 +20,7 @@ EntityManager::EntityManager(const int MAX_ENTITIES) :
 	for (auto &entity_to_allocate : instances)
 		entity_to_allocate = new Entity(type(TYPE_UNKNOWN));
 
-	_player->type = type(TYPE_PLAYER);
+	player_->type = type(TYPE_PLAYER);
 }
 
 EntityManager::~EntityManager()
@@ -31,7 +33,7 @@ EntityManager::~EntityManager()
 Entity* EntityManager::add_entity(ent_type entity_type_to_init) //this can be optimised some day
 {
 	if (entity_type_to_init == TYPE_PLAYER)
-		return _player;
+		return player_;
 
 	for (auto &entity : instances)
 	{
@@ -55,33 +57,34 @@ void EntityManager::remove_entity(Entity *entity_to_kill)
 void EntityManager::update()
 {
 	get_input();
-	_player->move_by(_player->velocity.x, _player->velocity.y);
+	player_->move_by(player_->velocity.x, player_->velocity.y);
 }
 
 void EntityManager::get_input()
 {
-	if		(io::is_key_held(K_A)) _player->velocity.x	= -0.0001f;
-	else if (io::is_key_held(K_D)) _player->velocity.x	= 0.0001f;
-	else	_player->velocity.x = 0;
+	if		(io::is_key_held(K_A)) player_->velocity.x	= -0.0001f;
+	else if (io::is_key_held(K_D)) player_->velocity.x	= 0.0001f;
+	else	player_->velocity.x = 0;
 }
 
 void EntityManager::draw()
 {
 	std::sort(instances.begin(), instances.end(),
 		[](const Entity* entity1, const Entity* entity2) -> bool 
-		{ return entity1->type->asset.get_textureID() < entity2->type->asset.get_textureID(); });
+	{ return entity1->type->texture->gl_id < entity2->type->texture->gl_id; });
 
 	std::vector<glm::vec2> translation_vec;
-	GLuint bound_texture = instances[0]->type->asset.get_textureID();
+	GLuint bound_texture = player_->type->texture->gl_id; //because player_ == instances[0]
 
 	for (Entity *entity : instances)
 	{
 		if (entity->type == TYPE_UNKNOWN)
 			continue;
-		if (bound_texture == type(TYPE_UNKNOWN)->asset.get_textureID())
-			bound_texture = entity->type->asset.get_textureID(); //first texture other than 0
 
-		if (entity->type->asset.get_textureID() == bound_texture)
+		if (bound_texture == type(TYPE_UNKNOWN)->texture->gl_id)
+			bound_texture = entity->type->texture->gl_id; //first texture other than 0
+
+		if (entity->type->texture->gl_id == bound_texture)
 		{
 			translation_vec.push_back(entity->pos);
 		}
@@ -90,7 +93,7 @@ void EntityManager::draw()
 			gl::add_batch(translation_vec, bound_texture);
 			translation_vec.clear();
 			translation_vec.push_back(entity->pos);
-			bound_texture = entity->type->asset.get_textureID();
+			bound_texture = entity->type->texture->gl_id;
 		}
 	}
 	gl::add_batch(translation_vec, bound_texture);

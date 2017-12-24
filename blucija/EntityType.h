@@ -2,26 +2,26 @@
 #include <vec2.hpp>
 #include <glew.h>
 
-#include "Asset.h"
+#include "Texture.h"
 
 enum ent_type
 {
 	TYPE_UNKNOWN,
 	TYPE_PLAYER,
-	TYPE_MONSTER,
+	TYPE_ENEMY,
 	TYPE_FRIENDLY,
 
-	TYPE_TOTAL
+	TYPE_COUNT
 };
 
 class EntityType
 {
 public:
-	//IDs
+
 	ent_type type = TYPE_UNKNOWN;
-	Asset asset = Asset(ASST_TEXTURE);
 
 	//graphics stuff
+	Texture *texture;
 	float default_scale = 1.0f;
 	float default_orientation_r = true;
 
@@ -43,8 +43,6 @@ static inline EntityType* type(ent_type enum_entity_type)
 	static EntityType *inited_types = EntityType::init_entity_types();
 	return &inited_types[enum_entity_type];
 }
-
-//const auto &type = get_type; //alias bcs too long
 
 inline bool operator== (EntityType *entity_type_ptr, ent_type entity_type_enum)
 {

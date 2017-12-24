@@ -8,9 +8,9 @@
 namespace io
 {
 
-bool pressed_keys[K_TOTAL];
-bool released_keys[K_TOTAL];
-bool held_keys[K_TOTAL];
+bool pressed_keys[K_COUNT];
+bool released_keys[K_COUNT];
+bool held_keys[K_COUNT];
 
 Keycode convert_sdlk_to_keycode(SDL_Keycode keycode)
 {
@@ -52,7 +52,7 @@ Keycode convert_sdlk_to_keycode(SDL_Keycode keycode)
 bool update()
 {
 	SDL_Event evnt;
-	for (int i = 0; i < K_TOTAL; i++)
+	for (int i = 0; i < K_COUNT; i++)
 	{
 		released_keys[i] = pressed_keys[i] || held_keys[i]; //this works bcs of for loop after while; or is used for VERY short press of key
 		pressed_keys[i] = false;
@@ -83,7 +83,7 @@ bool update()
 		}
 	}
 
-	for (int i = 0; i < K_TOTAL; i++)
+	for (int i = 0; i < K_COUNT; i++)
 	{
 		if (held_keys[i])
 			released_keys[i] = false;

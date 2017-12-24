@@ -46,7 +46,7 @@ enum Keycode
 	K_LEFT,
 	K_SPACE,
 
-	K_TOTAL
+	K_COUNT
 };
 
 enum Mousecode
@@ -54,7 +54,7 @@ enum Mousecode
 	M_LEFT,
 	M_RIGHT,
 
-	M_TOTAL
+	M_COUNT
 };
 
 enum Actions
@@ -66,7 +66,7 @@ enum Actions
 	JUMP,
 	ATTACK,
 
-	ACTION_TOTAL
+	ACTION_COUNT
 };
 
 namespace io
@@ -76,19 +76,19 @@ bool update();
 
 inline bool is_key_pressed(Keycode key)
 {
-	extern bool pressed_keys[K_TOTAL];
+	extern bool pressed_keys[K_COUNT];
 	return pressed_keys[key];
 }
 
 inline bool is_key_released(Keycode key)
 {
-	extern bool released_keys[K_TOTAL];
+	extern bool released_keys[K_COUNT];
 	return released_keys[key];
 }
 
 inline bool is_key_held(Keycode key)
 {
-	extern bool held_keys[K_TOTAL];
+	extern bool held_keys[K_COUNT];
 	return held_keys[key];
 }
 

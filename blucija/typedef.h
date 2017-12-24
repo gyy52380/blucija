@@ -9,6 +9,3 @@ typedef uint64_t	uint64;
 typedef int16_t		int16;
 typedef int32_t		int32;
 typedef int64_t		int64;
-
-typedef uint32	texture_ID;
-typedef uint32	asset_ID;
