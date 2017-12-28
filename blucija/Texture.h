@@ -18,7 +18,6 @@ public:
 	uint32	gl_id = 0; //uninitialized
 
 
-	Texture(string path);
 	Texture();
 	~Texture();
 

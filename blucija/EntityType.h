@@ -35,6 +35,8 @@ public:
 	EntityType();
 	~EntityType();
 
+	inline uint32 get_gl_texture_id() { return texture->gl_id; }
+
 	static EntityType* init_entity_types(); //this is only called once
 };
 

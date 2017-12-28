@@ -9,9 +9,9 @@
 #include "typedef.h"
 #include "Graphics.h"
 #include "InputManager.h"
-
 #include "Quad.h"
 #include "EntityManager.h"
+#include "Renderer.h"
 
 #include <glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
@@ -94,9 +94,9 @@ int main(int argc, char **argv)
 	while (io::update())
 	{
 		manager.update();
-		manager.draw();
+		manager.queue_for_rendering();
 
-		gl::draw(the_window_handle);
+		renderer::render(the_window_handle, 1.0f);
 	}
 
 	cleanup();

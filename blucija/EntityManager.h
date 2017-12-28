@@ -17,7 +17,8 @@ public:
 	void remove_entity(Entity* entity_to_kill);
 
 	void update();
-	void draw();
+	void queue_for_rendering();
+	void old_draw();
 
 	void get_input();
 

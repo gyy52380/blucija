@@ -9,6 +9,7 @@
 #include "InputManager.h"
 #include "typedef.h"
 #include "Texture.h"
+#include "Renderer.h"
 
 #define player_ instances[0]
 
@@ -60,6 +61,14 @@ void EntityManager::update()
 	player_->move_by(player_->velocity.x, player_->velocity.y);
 }
 
+void EntityManager::queue_for_rendering()
+{
+	renderer::start_new_frame();
+
+	for (auto &entity : instances)
+		renderer::add_element(entity->entity_type->texture->gl_id, entity->pos, entity->scale, entity->orientation_r);
+}
+
 void EntityManager::get_input()
 {
 	if		(io::is_key_held(K_A)) player_->velocity.x	= -0.0001f;
@@ -67,7 +76,7 @@ void EntityManager::get_input()
 	else	player_->velocity.x = 0;
 }
 
-void EntityManager::draw()
+void EntityManager::old_draw()
 {
 	std::sort(instances.begin(), instances.end(),
 		[](const Entity* entity1, const Entity* entity2) -> bool 

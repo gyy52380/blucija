@@ -24,7 +24,7 @@ EntityType* EntityType::init_entity_types() //ONLY CALL AFTER OPENGL INIT
 {
 	assert(glewInit() == GLEW_OK && "OpenGL not initialized!");
 
-	static Texture entity_textures[TYPE_COUNT]; //important to not initialize textures below with copy constructor, that calls dtor, destroy_gl_texture
+	static Texture entity_textures[TYPE_COUNT]; //important to not initialize textures below with copy constructor, that calls dtor and destroy_gl_texture
 	entity_textures[TYPE_UNKNOWN]	.gl_id = 0; //no texture
 	entity_textures[TYPE_PLAYER]	.load_texture("player.jpg");
 	entity_textures[TYPE_ENEMY]		.load_texture("enemy.jpg");
