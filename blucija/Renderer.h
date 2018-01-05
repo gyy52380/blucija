@@ -4,6 +4,10 @@
 //#include <glew.h>
 #include <vec2.hpp>
 
+#include "typedef.h"
+
+#include "RenderState.h"
+
 namespace renderer
 {
 
