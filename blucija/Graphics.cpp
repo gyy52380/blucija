@@ -20,8 +20,6 @@
 namespace gl
 {
 
-typedef std::pair<GLuint, std::vector<glm::vec2>> render_pair;
-std::vector<render_pair> render_batches;
 
 GLProgram shader_program;
 
@@ -111,46 +109,6 @@ void clear_screen()
 	glClearColor(background_color[0], background_color[1], background_color[2], background_color[3]);
 }
 
-void add_batch(std::vector<glm::vec2> trans_vec, GLuint textureID)
-{
-	render_batches.push_back(render_pair(textureID, trans_vec));
-}
-
-void draw(SDL_Window *window_handle)
-{
-	clear_screen();
-
-	glBindVertexArray(vao);
-	shader_program.use();
-
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-	glEnableVertexAttribArray(2);
-
-	glBindBuffer(GL_ARRAY_BUFFER, translation_vbo);
-	
-	for (auto &batch : render_batches)
-	{
-		glBindTexture(GL_TEXTURE_2D, batch.first);
-		glBufferData(GL_ARRAY_BUFFER, sizeof(glm::vec2) * batch.second.size(), batch.second.data(), GL_STATIC_DRAW); //maybe dynamic
-
-		glDrawArraysInstanced(GL_TRIANGLES, 0, 6, batch.second.size());
-
-		glBindTexture(GL_TEXTURE_2D, 0);
-	}
-	render_batches.clear();
-
-	SDL_GL_SwapWindow(window_handle);
-
-	glDisableVertexAttribArray(0);
-	glDisableVertexAttribArray(1);
-	glDisableVertexAttribArray(2);
-
-	glBindVertexArray(0);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	shader_program.disable();
-}
-
 void draw_quads(SDL_Window *window_to_draw, GLuint texID, glm::vec2 *array_ptr, uint32 n_elements)
 {
 	glBindVertexArray(vao);
@@ -168,7 +126,6 @@ void draw_quads(SDL_Window *window_to_draw, GLuint texID, glm::vec2 *array_ptr, 
 	glBindTexture(GL_TEXTURE_2D, texID);
 
 	glDrawArraysInstanced(GL_TRIANGLES, 0, 6, n_elements);
-	SDL_GL_SwapWindow(window_to_draw);
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	////
@@ -180,6 +137,11 @@ void draw_quads(SDL_Window *window_to_draw, GLuint texID, glm::vec2 *array_ptr, 
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	shader_program.disable();
+}
+
+void swap_screen_buffer(SDL_Window *window_to_swap)
+{
+	SDL_GL_SwapWindow(window_to_swap);
 }
 
 void cleanup()

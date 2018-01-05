@@ -87,16 +87,46 @@ int main(int argc, char **argv)
 	std::cout << to_string(x) << std::endl;
 
 
-	EntityManager manager(1);
+	EntityManager manager(2);
 	auto player = manager.add_entity(TYPE_PLAYER);
+	auto enemy = manager.add_entity(TYPE_ENEMY);
 	player->move_to(0, 0);
+	enemy->move_to(4, 0);
 
+	std::cout << Texture::texture_count << std::endl;
+
+	////
+	constexpr float timestep = 1.0f / 120.0f * 1000.0f;
+	uint32 time[2];
+	uint32 dt = 0.0f;
+	float accumulator = 0.0f;
+	////
 	while (io::update())
 	{
-		manager.update();
-		manager.queue_for_rendering();
+		////
+		time[0] = SDL_GetTicks();
+		////
 
-		renderer::render(the_window_handle, 1.0f);
+		while (accumulator >= timestep) //physics loop
+		{
+			////
+			accumulator -= timestep;
+			////
+
+			manager.update();
+
+			if (player->pos.x >= enemy->pos.x)
+				player->pos.x = enemy->pos.x-1;
+
+			manager.queue_for_rendering();
+		}
+
+		renderer::render(the_window_handle, accumulator/1000.0f);
+		////
+		time[1] = SDL_GetTicks();
+		dt = time[1] - time[0];
+		accumulator += dt;
+		////
 	}
 
 	cleanup();

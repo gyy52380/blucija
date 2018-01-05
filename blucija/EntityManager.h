@@ -18,7 +18,6 @@ public:
 
 	void update();
 	void queue_for_rendering();
-	void old_draw();
 
 	void get_input();
 

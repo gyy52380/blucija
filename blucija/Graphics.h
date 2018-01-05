@@ -15,6 +15,7 @@ void cleanup();
 void clear_screen();
 void draw(SDL_Window* window_handle);
 void draw_quads(SDL_Window *window_to_draw, GLuint texID, glm::vec2 *array_ptr, uint32 n_elements);
+void swap_screen_buffer(SDL_Window *window_to_swap);
 
 
 }
