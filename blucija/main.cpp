@@ -10,8 +10,9 @@
 #include "Error.h"
 #include "Graphics.h"
 #include "InputManager.h"
-#include "EntityManager.h"
 #include "Renderer.h"
+
+#include "EntityManager.h"
 #include "Collision.h"
 
 #include <glm.hpp>
@@ -28,7 +29,7 @@ SDL_GLContext the_gl_context;
 
 
 
-void init()
+void init()//(SDL_Window* the_window_handle, SDL_GLContext the_gl_context, uint32 SCREEN_WIDTH, uint32 SCREEN_HEIGHT)
 {
 	if (SDL_Init(SDL_INIT_VIDEO) < 0)
 		fatalError("SDL2 failed to initialize!, SDL error: " + (std::string)SDL_GetError());
@@ -45,7 +46,7 @@ void init()
 	SDL_GL_SetSwapInterval(1); //vsync
 
 	the_window_handle = SDL_CreateWindow("Window", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, SCREEN_WIDTH, SCREEN_HEIGHT,
-										SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
+		SDL_WINDOW_RESIZABLE | SDL_WINDOW_OPENGL | SDL_WINDOW_SHOWN);
 	if (!the_window_handle)
 		fatalError("SDL2 failed to create a window!, SDL error: " + (std::string)SDL_GetError());
 
@@ -72,7 +73,7 @@ void cleanup()
 
 int main(int argc, char **argv)
 {
-	init();
+	init();//(the_window_handle, the_gl_context, SCREEN_WIDTH, SCREEN_HEIGHT);
 
 	using namespace glm;
 
@@ -100,7 +101,6 @@ int main(int argc, char **argv)
 		////
 		time[0] = SDL_GetTicks();
 		////
-
 		while (accumulator >= timestep) //physics loop
 		{
 			////

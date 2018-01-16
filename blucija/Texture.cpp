@@ -2,7 +2,7 @@
 #include "Texture.h"
 
 #include <string>
-#include <iostream>
+#include <cstdio>
 
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
@@ -37,7 +37,7 @@ void Texture::load_texture(string path)
 void Texture::free_image_data()
 {
 	stbi_image_free(this->data);
-	std::cout << "Freed image data: " << this->path() << std::endl;
+	printf("Freed image data: %s\n", this->path().c_str());
 }
 
 void Texture::create_opengl_texture()
@@ -47,9 +47,9 @@ void Texture::create_opengl_texture()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data);
-	if (glGetError())
+	if (uint32 error = glGetError())
 	{
-		std::cout << "Can't load texture: %s; openGL error: %i" << this->path().c_str() << " " << glGetError() << std::endl;
+		printf("Can't load texture: %s; openGL error: %i\n", this->path().c_str(), error);
 		this->gl_id = 0;
 		return;
 	}
@@ -69,7 +69,7 @@ void Texture::create_opengl_texture()
 void Texture::destroy_opengl_texture()
 {
 	glDeleteTextures(1, &this->gl_id);
-	std::cout << "destroyed opengl texture: " << this->path().c_str() << std::endl;
+	printf("destroyed opengl texture: %s\n", this->path().c_str());
 }
 
 void Texture::bind_texture(int slot)
