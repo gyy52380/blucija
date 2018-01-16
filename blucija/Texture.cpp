@@ -28,7 +28,7 @@ void Texture::load_texture(string path)
 	else //if already given the shortened path name
 		this->short_path = path;
 
-	this->data = stbi_load(this->path().c_str(), &this->width, &this->height, &this->channels, 4);
+	this->data = stbi_load(this->path().c_str(), &this->width, &this->height, &this->channels, STBI_rgb_alpha);
 
 	this->create_opengl_texture();
 	this->free_image_data(); //meh not here

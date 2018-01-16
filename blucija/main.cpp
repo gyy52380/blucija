@@ -12,13 +12,16 @@
 #include "Quad.h"
 #include "EntityManager.h"
 #include "Renderer.h"
+#include "Collision.h"
 
 #include <glm.hpp>
 #define GLM_ENABLE_EXPERIMENTAL
 #include <gtx\string_cast.hpp>
 
+#include <cmath>
+
 const uint32 SCREEN_WIDTH = 640;
-const uint32 SCREEN_HEIGHT = 480;
+const uint32 SCREEN_HEIGHT = 640;
 
 SDL_Window* the_window_handle;
 SDL_GLContext the_gl_context;
@@ -80,20 +83,19 @@ int main(int argc, char **argv)
 	init();
 
 	using namespace glm;
-	vec2 x1(1, 1);
-	vec2 x2(2, 2);
-	float a = 0.0f;
-	vec2 x = mix(x1, x2, a);
-	std::cout << to_string(x) << std::endl;
 
-
-	EntityManager manager(2);
+	EntityManager manager(4);
 	auto player = manager.add_entity(TYPE_PLAYER);
 	auto enemy = manager.add_entity(TYPE_ENEMY);
+	auto is_colliding_indicator = manager.add_entity(TYPE_FRIENDLY);
+
 	player->move_to(0, 0);
 	enemy->move_to(4, 0);
 
-	std::cout << Texture::texture_count << std::endl;
+	float r = 0.5f;
+	player->hitbox.radius = r;
+	enemy->hitbox.radius = r;
+	is_colliding_indicator->move_to(3, 3);
 
 	////
 	constexpr float timestep = 1.0f / 120.0f * 1000.0f;
@@ -113,10 +115,24 @@ int main(int argc, char **argv)
 			accumulator -= timestep;
 			////
 
-			manager.update();
+			if (enemy->position.x >= 6)
+				enemy->velocity.x = -0.1f;
 
-			if (player->pos.x >= enemy->pos.x-1)
-				player->pos.x = enemy->pos.x-1;
+			manager.update();
+			
+			
+			player->hitbox.position = player->position + vec2(r/sqrt(2), r / sqrt(2));
+			enemy->hitbox.position = enemy->position + vec2(r / sqrt(2), r / sqrt(2));
+
+			if (gjk::collision<Circle, Circle>(player->hitbox, enemy->hitbox))
+			{
+				std::cout << "Colliding" << std::endl;
+				enemy->velocity.x = 0.1f;
+			}
+			else
+				std::cout << "Not" << std::endl;
+				
+			
 
 			manager.queue_for_rendering();
 		}

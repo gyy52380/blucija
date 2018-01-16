@@ -5,6 +5,8 @@
 
 #include "EntityType.h"
 
+#include "Shapes.h"
+
 class Entity
 {
 public:
@@ -18,10 +20,14 @@ public:
 	bool orientation_r;
 
 	//logic
-	glm::vec2 pos;
-	int health;
-	int attack;
+	glm::vec2 position;
 	glm::vec2 velocity;
+	glm::vec2 acceleration;
+	uint16 health;
+	uint16 attack;
+
+	////
+	Circle hitbox;
 
 	Entity(EntityType *entity_type);
 	Entity();
@@ -29,6 +35,8 @@ public:
 
 	void move_to(float x, float y);
 	void move_by(float x, float y);
+
+
 };
 
 class EntityInteractive : Entity

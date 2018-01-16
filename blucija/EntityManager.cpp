@@ -58,16 +58,19 @@ void EntityManager::remove_entity(Entity *entity_to_kill)
 void EntityManager::update()
 {
 	get_input();
-	player_->move_by(player_->velocity.x, player_->velocity.y);
+
+	for (auto &entity : instances)
+		if (entity->type != TYPE_UNKNOWN)
+			entity->position += entity->velocity;
 }
 
 void EntityManager::queue_for_rendering()
 {
-	renderer::start_new_frame(this->MAX_ENTITIES);
+	renderer::start_new_frame();
 
 	for (auto &entity : instances)
 		if (entity->type != TYPE_UNKNOWN)
-			renderer::add_element(entity->entity_type->texture->gl_id, entity->pos, entity->scale, entity->orientation_r);
+			renderer::add_element(entity->entity_type->texture->gl_id, entity->position, entity->scale, entity->orientation_r);
 }
 
 void EntityManager::get_input()

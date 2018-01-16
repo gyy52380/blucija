@@ -25,10 +25,15 @@ EntityType* EntityType::init_entity_types() //ONLY CALL AFTER OPENGL INIT
 	assert(glewInit() == GLEW_OK && "OpenGL not initialized!");
 
 	static Texture entity_textures[TYPE_COUNT]; //important to not initialize textures below with copy constructor, that calls dtor and destroy_gl_texture
-	entity_textures[TYPE_UNKNOWN]	.gl_id = 0; //no texture
-	entity_textures[TYPE_PLAYER]	.load_texture("player.jpg");
-	entity_textures[TYPE_ENEMY]		.load_texture("enemy.jpg");
+	entity_textures[TYPE_UNKNOWN]	.gl_id = 0;//.load_texture(""); //no texture
+	entity_textures[TYPE_PLAYER]	.load_texture("circle.png");//("player.jpg");
+	entity_textures[TYPE_ENEMY]		.load_texture("circle.png");//("enemy.jpg");
 	entity_textures[TYPE_FRIENDLY]	.load_texture("friendly.jpg");
+
+	std::cout << entity_textures[TYPE_UNKNOWN].gl_id << std::endl;
+	std::cout << entity_textures[TYPE_PLAYER].gl_id << std::endl;
+	std::cout << entity_textures[TYPE_ENEMY].gl_id << std::endl;
+	std::cout << entity_textures[TYPE_FRIENDLY].gl_id << std::endl;
 
 
 	static EntityType types[TYPE_COUNT];
@@ -62,7 +67,7 @@ EntityType* EntityType::init_entity_types() //ONLY CALL AFTER OPENGL INIT
 	types[TYPE_ENEMY].default_scale = 1.0f;
 	types[TYPE_ENEMY].default_orientation_r = false;
 
-	types[TYPE_ENEMY].default_velocity = glm::vec2(1, 0);
+	types[TYPE_ENEMY].default_velocity = glm::vec2(0, 0);
 	types[TYPE_ENEMY].default_health = 10;
 	types[TYPE_ENEMY].default_attack = 1;
 
