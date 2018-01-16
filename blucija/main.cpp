@@ -126,11 +126,11 @@ int main(int argc, char **argv)
 
 			if (gjk::collision<Circle, Circle>(player->hitbox, enemy->hitbox))
 			{
-				std::cout << "Colliding" << std::endl;
+				//std::cout << "Colliding" << std::endl;
 				enemy->velocity.x = 0.1f;
 			}
 			else
-				std::cout << "Not" << std::endl;
+				//std::cout << "Not" << std::endl;
 				
 			
 

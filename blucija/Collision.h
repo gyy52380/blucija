@@ -142,10 +142,7 @@ bool collision(Shape1 & const s1, Shape2 & const s2)
 			return false; //no collision
 
 		if (in_simplex(&simplex, &d))
-		{
-			std::cout << "Colliding! s1.r - s2.r = " << s1.position.x + s1.radius - (s2.position.x + s2.radius) << std::endl;
 			return true;
-		}
 	}
 }
 

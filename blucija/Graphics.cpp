@@ -71,6 +71,13 @@ void create_instance_quad(float q_width, float q_height, GLuint *quad_vbo)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
+void enable_blending()
+{
+	glEnable(GL_BLEND);
+	glBlendEquation(GL_ADD);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+}
+
 void init(uint32 camera_scale_x, uint32 camera_scale_y)
 {
 	shader_program.addShader("../data/shaders/vertex_shader.vert", GL_VERTEX_SHADER);
@@ -98,6 +105,8 @@ void init(uint32 camera_scale_x, uint32 camera_scale_y)
 	//unbind everything
 	glBindVertexArray(0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	enable_blending(); //for transparency
 }
 
 void clear_screen()
