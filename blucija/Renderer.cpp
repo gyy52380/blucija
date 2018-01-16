@@ -28,7 +28,7 @@ void add_element(GLuint textureID, glm::vec2 position, float scale, bool orienta
 	future_state.add_element(textureID, position, scale, orientation_r);
 }
 
-void start_new_frame()
+void start_new_frame(uint32 entity_count)
 {
 	future_state.clear();
 }
