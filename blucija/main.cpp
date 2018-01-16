@@ -7,9 +7,9 @@
 #include <iostream>
 
 #include "typedef.h"
+#include "Error.h"
 #include "Graphics.h"
 #include "InputManager.h"
-#include "Quad.h"
 #include "EntityManager.h"
 #include "Renderer.h"
 #include "Collision.h"
@@ -26,15 +26,7 @@ const uint32 SCREEN_HEIGHT = 640;
 SDL_Window* the_window_handle;
 SDL_GLContext the_gl_context;
 
-void fatalError(std::string errMessage)
-{
-	printf("%s\n", errMessage.c_str());
 
-	SDL_GL_DeleteContext(the_gl_context);
-	SDL_DestroyWindow(the_window_handle);
-	SDL_Quit();
-	exit(0xF);
-}
 
 void init()
 {
