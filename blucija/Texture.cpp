@@ -47,12 +47,12 @@ void Texture::create_opengl_texture()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data);
-	if (uint32 error = glGetError())
+	/*if (uint32 error = glGetError())
 	{
 		printf("Can't load texture: %s; openGL error: %i\n", this->path().c_str(), error);
 		this->gl_id = 0;
 		return;
-	}
+	}*/
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

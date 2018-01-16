@@ -2,6 +2,7 @@
 #include "Error.h"
 
 #include <string>
+#include <cstdio>
 
 void fatalError(const char *errMessage)
 {
@@ -20,4 +21,6 @@ void fatalError(std::string errMessage)
 {
 	fatalError(errMessage.c_str());
 }
+
+
 

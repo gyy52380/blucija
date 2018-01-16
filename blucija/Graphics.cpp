@@ -76,14 +76,8 @@ void create_instance_quad(float q_width, float q_height, GLuint *quad_vbo)
 void enable_blending()
 {
 	glEnable(GL_BLEND);
-	if (uint32 error = glGetError())
-		printf("Blending. Error code: %i\n", error);
 	glBlendEquation(GL_FUNC_ADD);
-	if (uint32 error = glGetError())
-		printf("Blend eq. Error code: %i\n", error);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	if (uint32 error = glGetError())
-		printf("Blend func. Error code: %i\n", error);
 }
 
 void init(uint32 camera_scale_x, uint32 camera_scale_y)
@@ -115,7 +109,6 @@ void init(uint32 camera_scale_x, uint32 camera_scale_y)
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
 	enable_blending(); //for transparency
-	
 }
 
 void clear_screen()
