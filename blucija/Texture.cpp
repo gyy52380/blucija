@@ -10,9 +10,10 @@
 using std::string;
 
 string Texture::path_prefix = "../data/textures/";
-uint32 Texture::texture_count = 0;
+textureID Texture::texture_count = 0;
+Texture Texture::textures[TXT_COUNT] = {};
 
-Texture::Texture() : id(texture_count++)
+Texture::Texture()
 {
 }
 
@@ -23,12 +24,21 @@ Texture::~Texture()
 
 void Texture::load_texture(string path)
 {
+	this->id = texture_count++;
+
 	if (path.size() > path_prefix.size() && path.compare(0, path_prefix.size(), path_prefix) == 0) //if path begins with prefix
 		this->short_path = path.substr(path_prefix.size() - 1);
 	else //if already given the shortened path name
 		this->short_path = path;
 
 	this->data = stbi_load(this->path().c_str(), &this->width, &this->height, &this->channels, STBI_rgb_alpha);
+
+	if (this->data == NULL)
+	{
+		printf("Couldn't open image file: %s", this->path().c_str());
+		this->gl_id = 0;
+		return;
+	}
 
 	this->create_opengl_texture();
 	this->free_image_data(); //meh not here
@@ -47,12 +57,6 @@ void Texture::create_opengl_texture()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data);
-	/*if (uint32 error = glGetError())
-	{
-		printf("Can't load texture: %s; openGL error: %i\n", this->path().c_str(), error);
-		this->gl_id = 0;
-		return;
-	}*/
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -63,7 +67,6 @@ void Texture::create_opengl_texture()
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
 	this->gl_id = textureID;
-	//free image data
 }
 
 void Texture::destroy_opengl_texture()
@@ -76,6 +79,19 @@ void Texture::bind_texture(int slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
 	glBindTexture(GL_TEXTURE_2D, this->gl_id);
+}
+
+void Texture::init_textures()
+{
+	textures[TXT_UNKNWON]	.load_texture("");
+	textures[TXT_PLAYER]	.load_texture("player.jpg");
+	textures[TXT_ENEMY]		.load_texture("enemy.jpg");
+	textures[TXT_FRIENDLY]	.load_texture("friendly.jpg");
+
+	textures[TXT_GREEN]		.load_texture("green.png");
+	textures[TXT_RED]		.load_texture("red.png");
+
+	textures[TXT_CIRCLE]	.load_texture("circle.png");
 }
 
 
