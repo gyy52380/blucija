@@ -68,7 +68,7 @@ int main(int argc, char **argv)
 			player->hitbox.position = player->position + vec2(r / sqrt2, r / sqrt2);
 			enemy->hitbox.position = enemy->position + vec2(r / sqrt2, r / sqrt2);
 
-			if (gjk::collision(player->hitbox, enemy->hitbox))
+			if (gjk::collision<Circle, Circle>(player->hitbox, enemy->hitbox))
 				manager.change_entity_type(is_colliding_indicator, TYPE_GREEN_DEBUG);
 			else
 				manager.change_entity_type(is_colliding_indicator, TYPE_RED_DEBUG);
