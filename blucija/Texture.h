@@ -4,6 +4,24 @@
 #include "typedef.h"
 using std::string;
 
+enum
+{
+	TXT_UNKNWON,
+	TXT_PLAYER,
+	TXT_ENEMY,
+	TXT_FRIENDLY,
+
+	TXT_GREEN,
+	TXT_RED,
+
+	TXT_CIRCLE,
+
+	TXT_COUNT
+};
+
+typedef int textureID;
+typedef unsigned int GLuint;
+
 class Texture
 {
 public:
@@ -14,8 +32,8 @@ public:
 	int 	channels;
 	uint8*	data;
 
-	uint32	id;
-	uint32	gl_id = 0; //uninitialized
+	textureID	id		= TXT_UNKNWON;
+	GLuint		gl_id	= 0; //uninitialized
 
 
 	Texture();
@@ -28,7 +46,13 @@ public:
 	void bind_texture(int slot = 0);
 
 	static string path_prefix;
-	static uint32 texture_count;
+	static textureID texture_count;
+	static Texture textures[TXT_COUNT];
+
+	static void init_textures();
 
 	inline string path() { return path_prefix + short_path; }
+
+
+	
 };

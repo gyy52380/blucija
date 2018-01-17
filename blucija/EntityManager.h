@@ -15,6 +15,7 @@ public:
 
 	Entity* add_entity(ent_type entity_type_to_init);
 	void remove_entity(Entity* entity_to_kill);
+	void change_entity_type(Entity *to_change, ent_type new_type);
 
 	void update();
 	void queue_for_rendering();

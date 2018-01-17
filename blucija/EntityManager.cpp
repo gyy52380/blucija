@@ -55,6 +55,12 @@ void EntityManager::remove_entity(Entity *entity_to_kill)
 	entity_to_kill->entity_type = type(TYPE_UNKNOWN); //just change the type ptr. all other params stay as before the entity "died"
 }
 
+void EntityManager::change_entity_type(Entity * to_change, ent_type new_type)
+{
+	to_change->type = new_type;
+	to_change->entity_type = type(new_type);
+}
+
 void EntityManager::update()
 {
 	get_input();
@@ -75,8 +81,13 @@ void EntityManager::queue_for_rendering()
 
 void EntityManager::get_input()
 {
-	if		(io::is_key_held(K_A)) player_->velocity.x	= -0.1f;
-	else if (io::is_key_held(K_D)) player_->velocity.x	= 0.1f;
-	else	player_->velocity.x = 0;
+	bool is_moving = false;
+
+	if (io::is_key_held(K_A)) { player_->velocity.x = -0.01f; is_moving = true; }
+	if (io::is_key_held(K_D)) {	player_->velocity.x	= 0.01f; is_moving = true; }
+	if (io::is_key_held(K_W)) {	player_->velocity.y	= 0.01f; is_moving = true; }
+	if (io::is_key_held(K_S)) { player_->velocity.y = -0.01f; is_moving = true; }
+
+	if (!is_moving)				player_->velocity = glm::vec2(0, 0);
 }
 

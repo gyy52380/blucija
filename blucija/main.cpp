@@ -2,12 +2,9 @@
 //
 #include "stdafx.h"
 
-#include <string>
-#include <iostream>
-
-
 #include "InputManager.h"
 #include "Renderer.h"
+/////////////////////////////////
 
 #include "EntityManager.h"
 #include "Collision.h"
@@ -17,6 +14,8 @@
 #include <gtx\string_cast.hpp>
 
 #include <cmath>
+#include <iostream>
+
 
 constexpr uint32 SCREEN_WIDTH = 640;
 constexpr uint32 SCREEN_HEIGHT = 640;
@@ -25,7 +24,7 @@ SDL_Window* the_window_handle;
 SDL_GLContext the_gl_context;
 
 #define GL_DEBUG
-#include "main_extension.cpp"
+#include "main_extension.cpp" //define GL_DEBUG before including this
 
 
 int main(int argc, char **argv)
@@ -36,7 +35,7 @@ int main(int argc, char **argv)
 
 	EntityManager manager(4);
 	auto player = manager.add_entity(TYPE_PLAYER);
-	auto enemy = manager.add_entity(TYPE_ENEMY);
+	auto enemy = manager.add_entity(TYPE_CIRCLE);
 	auto is_colliding_indicator = manager.add_entity(TYPE_FRIENDLY);
 
 	player->move_to(0, 0);
@@ -64,25 +63,18 @@ int main(int argc, char **argv)
 			accumulator -= timestep;
 			////
 
-			if (enemy->position.x >= 6)
-				enemy->velocity.x = -0.1f;
+			const float sqrt2 = sqrt(2);
 
-			manager.update();
-			
-			
-			player->hitbox.position = player->position + vec2(r/sqrt(2), r / sqrt(2));
-			enemy->hitbox.position = enemy->position + vec2(r / sqrt(2), r / sqrt(2));
+			player->hitbox.position = player->position + vec2(r / sqrt2, r / sqrt2);
+			enemy->hitbox.position = enemy->position + vec2(r / sqrt2, r / sqrt2);
 
 			if (gjk::collision<Circle, Circle>(player->hitbox, enemy->hitbox))
-			{
-				//std::cout << "Colliding" << std::endl;
-				enemy->velocity.x = 0.1f;
-			}
+				manager.change_entity_type(is_colliding_indicator, TYPE_GREEN_DEBUG);
 			else
-				//std::cout << "Not" << std::endl;
+				manager.change_entity_type(is_colliding_indicator, TYPE_RED_DEBUG);
 				
-			
 
+			manager.update();
 			manager.queue_for_rendering();
 		}
 

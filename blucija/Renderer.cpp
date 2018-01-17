@@ -13,8 +13,8 @@ namespace renderer
 
 //very inefficient
 
-RenderState draw_state(TYPE_COUNT); //this is very limited currently, should be dynamic number of textures? (Texture::texture_count)
-RenderState future_state(TYPE_COUNT);
+RenderState draw_state(TXT_COUNT); //this is very limited currently, should be dynamic number of textures? (Texture::texture_count)
+RenderState future_state(TXT_COUNT);
 
 
 void render(SDL_Window *the_window, float interpolation_param)
