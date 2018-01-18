@@ -37,7 +37,7 @@ void RenderState::draw(SDL_Window * const window_handle) const //TODO  add for o
 {
 	gl::clear_screen();
 
-	for (uint32 texID = 0; texID < texture_count; ++texID) //no need to start from 0 == no texture
+	for (uint32 texID = 1; texID < texture_count; ++texID) //no need to start from 0 == no texture
 		gl::draw_quads(window_handle, texID, position_array[texID].data(), position_array[texID].size());
 
 	gl::swap_screen_buffer(window_handle);

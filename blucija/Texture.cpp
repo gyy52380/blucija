@@ -9,6 +9,8 @@
 
 using std::string;
 
+#define FULL_PATH this->path().c_str()
+
 string Texture::path_prefix = "../data/textures/";
 textureID Texture::texture_count = 0;
 Texture Texture::textures[TXT_COUNT] = {};
@@ -24,30 +26,32 @@ Texture::~Texture()
 
 void Texture::load_texture(string path)
 {
-	this->id = texture_count++;
+	id = texture_count++;
+
+	if (path == "") //empty texture
+		return;
 
 	if (path.size() > path_prefix.size() && path.compare(0, path_prefix.size(), path_prefix) == 0) //if path begins with prefix
-		this->short_path = path.substr(path_prefix.size() - 1);
+		short_path = path.substr(path_prefix.size() - 1);
 	else //if already given the shortened path name
-		this->short_path = path;
+		short_path = path;
 
-	this->data = stbi_load(this->path().c_str(), &this->width, &this->height, &this->channels, STBI_rgb_alpha);
+	this->data = stbi_load(FULL_PATH, &width, &height, &channels, STBI_rgb_alpha);
 
 	if (this->data == NULL)
 	{
-		printf("Couldn't open image file: %s", this->path().c_str());
-		this->gl_id = 0;
+		printf("Couldn't open image file: %s", FULL_PATH);
 		return;
 	}
 
-	this->create_opengl_texture();
-	this->free_image_data(); //meh not here
+	create_opengl_texture();
+	free_image_data(); //meh not here
 }
 
 void Texture::free_image_data()
 {
-	stbi_image_free(this->data);
-	printf("Freed image data: %s\n", this->path().c_str());
+	stbi_image_free(data);
+	printf("Freed image data: %s\n", FULL_PATH);
 }
 
 void Texture::create_opengl_texture()
@@ -56,7 +60,7 @@ void Texture::create_opengl_texture()
 	glGenTextures(1, &textureID);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, this->width, this->height, 0, GL_RGBA, GL_UNSIGNED_BYTE, this->data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
@@ -66,21 +70,22 @@ void Texture::create_opengl_texture()
 
 	glBindTexture(GL_TEXTURE_2D, 0);
 	
-	this->gl_id = textureID;
+	gl_id = textureID;
 }
 
 void Texture::destroy_opengl_texture()
 {
-	glDeleteTextures(1, &this->gl_id);
-	printf("destroyed opengl texture: %s\n", this->path().c_str());
+	glDeleteTextures(1, &gl_id);
+	printf("destroyed opengl texture: %s\n", FULL_PATH);
 }
 
 void Texture::bind_texture(int slot)
 {
 	glActiveTexture(GL_TEXTURE0 + slot);
-	glBindTexture(GL_TEXTURE_2D, this->gl_id);
+	glBindTexture(GL_TEXTURE_2D, gl_id);
 }
 
+//this should be dynamic one day
 void Texture::init_textures()
 {
 	textures[TXT_UNKNWON]	.load_texture("");

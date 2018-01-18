@@ -42,6 +42,8 @@ int main(int argc, char **argv)
 	enemy->move_to(4, 0);
 
 	float r = 0.5f;
+	const vec2 edge_to_circle_center(r / sqrt(2), r / sqrt(2));
+
 	player->hitbox.radius = r;
 	enemy->hitbox.radius = r;
 	is_colliding_indicator->move_to(3, 3);
@@ -63,12 +65,10 @@ int main(int argc, char **argv)
 			accumulator -= timestep;
 			////
 
-			const float sqrt2 = sqrt(2);
+			player->hitbox.position = player->position + edge_to_circle_center;
+			enemy->hitbox.position = enemy->position + edge_to_circle_center;
 
-			player->hitbox.position = player->position + vec2(r / sqrt2, r / sqrt2);
-			enemy->hitbox.position = enemy->position + vec2(r / sqrt2, r / sqrt2);
-
-			if (gjk::collision<Circle, Circle>(player->hitbox, enemy->hitbox))
+			if (gjk::collision(player->hitbox, enemy->hitbox))
 				manager.change_entity_type(is_colliding_indicator, TYPE_GREEN_DEBUG);
 			else
 				manager.change_entity_type(is_colliding_indicator, TYPE_RED_DEBUG);

@@ -81,13 +81,12 @@ void EntityManager::queue_for_rendering()
 
 void EntityManager::get_input()
 {
-	bool is_moving = false;
+	if (io::is_key_held(K_A)) player_->velocity.x = -0.01f;
+	if (io::is_key_held(K_D)) player_->velocity.x = 0.01f;
+	if (io::is_key_held(K_W)) player_->velocity.y = 0.01f;
+	if (io::is_key_held(K_S)) player_->velocity.y = -0.01f;
 
-	if (io::is_key_held(K_A)) { player_->velocity.x = -0.01f; is_moving = true; }
-	if (io::is_key_held(K_D)) {	player_->velocity.x	= 0.01f; is_moving = true; }
-	if (io::is_key_held(K_W)) {	player_->velocity.y	= 0.01f; is_moving = true; }
-	if (io::is_key_held(K_S)) { player_->velocity.y = -0.01f; is_moving = true; }
-
-	if (!is_moving)				player_->velocity = glm::vec2(0, 0);
+	if (!io::is_key_held(K_A) && !io::is_key_held(K_D)) player_->velocity.x = 0;
+	if (!io::is_key_held(K_W) && !io::is_key_held(K_S)) player_->velocity.y = 0;
 }
 
